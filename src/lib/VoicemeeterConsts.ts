@@ -44,3 +44,13 @@ export enum BusProperties {
 	CompositeMode = "mode.Composite",
 	FadeTo = "FadeTo",
 }
+
+export enum CommandProperties {
+	Shutdown = "Shutdown",
+	Show = "Show",
+	Restart = "Restart",
+	Eject = "Eject",
+	Reset = "Reset",
+	Save = "Save",
+	Load = "Load",
+}

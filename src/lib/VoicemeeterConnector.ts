@@ -3,7 +3,7 @@ import ffi from "ffi-napi";
 import refArray from "ref-array-napi";
 import DLLHandler from "./DLLHandler";
 import { Device, VMLibrary, VoiceMeeterTypes } from "../types/VoicemeeterTypes";
-import { BusProperties, StripProperties } from "./VoicemeeterConsts";
+import { BusProperties, StripProperties, CommandProperties } from "./VoicemeeterConsts";
 /**
  * @ignore
  */
@@ -317,6 +317,23 @@ export default class Voicemeeter {
 			throw new Error("Not connected ");
 		}
 		const scriptString = `${selector}[${index}].${property}=${value};`;
+		const script = Buffer.alloc(scriptString.length + 1);
+		script.fill(0);
+		script.write(scriptString);
+		libVM.VBVMR_SetParameters(script);
+		return new Promise((resolve) => setTimeout(resolve, 200));
+	};
+
+	/**
+	 * Sends a command
+	 * @param {CommandProperties} property Propertyname which should be executed
+	 * @param value Property value
+	 */
+	public sendCommand = (property: CommandProperties, value: any): Promise<any> => {
+		if (!this.isConnected) {
+			throw new Error("Not connected ");
+		}
+		const scriptString = `Command.${property}=${value};`;
 		const script = Buffer.alloc(scriptString.length + 1);
 		script.fill(0);
 		script.write(scriptString);
