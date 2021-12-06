@@ -36,6 +36,7 @@ export declare enum BusProperties {
     Mute = "Mute",
     EQ = "EQ.on",
     Gain = "Gain",
+    Label = "Label",
     NormalMode = "mode.normal",
     AmixMode = "mode.Amix",
     BmixMode = "mode.Bmix",
