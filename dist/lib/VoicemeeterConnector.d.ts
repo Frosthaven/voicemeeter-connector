@@ -54,13 +54,13 @@ export default class Voicemeeter {
      * @param  {number} index Index of the bus
      * @param  {BusProperties} property Property which should be get
      */
-    getBusParameter: (index: number, property: BusProperties) => any;
+    getBusParameter: (index: number, property: BusProperties | string) => any;
     /**
      * Gets a strip parameter
      * @param  {number} index Index of the strip
      * @param  {StripProperties} property Property which should be get
      */
-    getStripParameter: (index: number, property: StripProperties) => any;
+    getStripParameter: (index: number, property: StripProperties | string) => any;
     /**
      * Sets a parameter of a strip.
      * @param  {number} index Strip number
