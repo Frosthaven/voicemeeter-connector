@@ -187,7 +187,7 @@ export default class Voicemeeter {
 	 * @param  {BusProperties} property Property which should be get
 	 */
 
-	public getBusParameter = (index: number, property: BusProperties | string) => {
+	public getBusParameter = (index: number, property: BusProperties) => {
 		return this.getParameter("Bus", index, property);
 	};
 
@@ -196,7 +196,7 @@ export default class Voicemeeter {
 	 * @param  {number} index Index of the strip
 	 * @param  {StripProperties} property Property which should be get
 	 */
-	public getStripParameter = (index: number, property: StripProperties | string) => {
+	public getStripParameter = (index: number, property: StripProperties) => {
 		return this.getParameter("Strip", index, property);
 	};
 
@@ -276,7 +276,7 @@ export default class Voicemeeter {
 	 * @param  {number} index Number of strip or bus
 	 * @param  {StripProperties|BusProperties} property Property which should be read
 	 */
-	private getParameter = (selector: "Strip" | "Bus", index: number, property: StripProperties | BusProperties | string) => {
+	private getParameter = (selector: "Strip" | "Bus", index: number, property: StripProperties | BusProperties) => {
 		const parameterName = `${selector}[${index}].${property}`;
 		if (!this.isConnected) {
 			throw new Error("Not correct connected ");
