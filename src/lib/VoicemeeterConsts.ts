@@ -3,9 +3,18 @@ export const InterfaceTypes = {
 	bus: 1,
 };
 
-/* @todo - probably through a different method
-	Strip[i].GainLayer[j]
-*/
+export enum Replacers {
+	App = "[app]",
+	Bus = "[bus]",
+	Button = "[button]",
+	Cell = "[cell]",
+	Channel = "[channel]",
+	Strip = "[strip]",
+}
+
+/* STRIP ***********************************************************************
+ **************************************************************************** */
+
 export enum StripProperties {
 	Mono = "Mono",
 	Mute = "Mute",
@@ -53,20 +62,27 @@ export enum StripProperties {
 	DeviceASIO = "device.asio",
 }
 
-/* @todo - probably through a different method
-	Bus[i].EQ.channel[j].cell[k].on
-	Bus[i].EQ.channel[j].cell[k].type
-	Bus[i].EQ.channel[j].cell[k].f
-	Bus[i].EQ.channel[j].cell[k].gain
-	Bus[i].EQ.channel[j].cell[k].q
-*/
+export enum StripGainLayerProperties {
+	GainLayer = "GainLayer[bus]",
+}
+
+export enum StripAppProperties {
+	StripAppGain = "AppGain",
+	StripAppMute = "AppMute",
+	StripAppGainPartialMatch = "App[app].Gain",
+	StripAppMutePartialMatch = "App[app].Mute",
+}
+
+/* BUS *************************************************************************
+ **************************************************************************** */
+
 export enum BusProperties {
 	Mono = "Mono",
 	Mute = "Mute",
 	EQ = "EQ.on",
 	EQAB = "EQ.AB",
 	Gain = "Gain",
-	Label = "Label", // not listed in api doc, but exists
+	Label = "Label", // not listed in api doc, but exists in newer versions
 	ModeNormal = "mode.normal",
 	ModeAmix = "mode.Amix",
 	ModeBmix = "mode.Bmix",
@@ -94,6 +110,17 @@ export enum BusProperties {
 	DeviceASIO = "device.asio",
 }
 
+export enum BusEQChannelCellProperties {
+	EQChannelCellOn = "EQ.channel[channel].cell[cell].on",
+	EQChannelCellType = "EQ.channel[channel].cell[cell].type",
+	EQChannelCellF = "EQ.channel[channel].cell[cell].f",
+	EQChannelCellGain = "EQ.channel[channel].cell[cell].gain",
+	EQChannelCellQ = "EQ.channel[channel].cell[cell].q",
+}
+
+/* COMMAND *********************************************************************
+ **************************************************************************** */
+
 export enum CommandProperties {
 	Shutdown = "Shutdown",
 	Show = "Show",
@@ -102,4 +129,103 @@ export enum CommandProperties {
 	Reset = "Reset",
 	Save = "Save",
 	Load = "Load",
+	DialogShowVBANCHAT = "DialogShow.VBANCHAT",
 }
+
+/* BUSEQ ***********************************************************************
+ **************************************************************************** */
+
+export enum CommandBusEQProperties {
+	LoadBUSEQ = "LoadBUSEQ[bus]",
+	SaveBUSEQ = "SaveBUSEQ[bus]",
+}
+
+/* BUTTON **********************************************************************
+ **************************************************************************** */
+
+export enum CommandButtonProperties {
+	ButtonState = "Button[button].State",
+	ButtonStateOnly = "Button[button].StateOnly",
+	ButtonTrigger = "Button[button].Trigger",
+}
+
+/* FX **************************************************************************
+ **************************************************************************** */
+
+export enum FXProperties {
+	ReverbOn = "Reverb.On",
+	ReverbAB = "Reverb.AB",
+	DelayOn = "Delay.On",
+	DelayAB = "Delay.AB",
+}
+
+/* PATCH ***********************************************************************
+ **************************************************************************** */
+
+/* @todo
+patch.asio[i] 0 to ASIO input ASIO Patch 1
+patch.OutA2[i] 0 to ASIO output channel ASIO Patch A2 Bus 2
+patch.OutA3[i] 0 to ASIO output channel ASIO Patch A3 Bus 2
+patch.OutA4[i] 0 to ASIO output channel ASIO Patch A4 Bus 3
+patch.OutA5[i] 0 to ASIO output channel ASIO Patch A5 Bus 3
+Patch.composite[j] 0 to 22 (1 = first channel) 0 = default BUS 2
+Patch.insert[k] 0 (off) or 1 (on) Virtual ASIO insert 2
+Patch.PostFaderComposite 0 (PRE) or 1 (POST) COMPOSITE Mode 2
+Patch.PostFxInsert 0 (PRE) or 1 (POST) Virtual INSERT Point 2
+
+i= input channel zero based index (for physical strips only – 2 channels per strip).
+j= composite channel zero based index (0 to 7) COMPOSITE mode is made of 8 channels.
+k= input channel zero based index (0 to 21).
+*/
+export enum PatchProperties {
+	PostFaderComposite = "PostFaderComposite",
+	PostFxInsert = "PostFxInsert",
+}
+
+export enum PatchChannelProperties {
+	Asio = "asio[channel]",
+	OutA2 = "OutA2[channel]",
+	OutA3 = "OutA3[channel]",
+	OutA4 = "OutA4[channel]",
+	OutA5 = "OutA5[channel]",
+}
+
+// @todo the following 2 patch properties
+export enum PatchCompositeProperties {
+	Composite = "composite[channel]",
+}
+
+export enum PatchInsertProperties {
+	Insert = "insert[channel]",
+}
+
+/* SYSTEM **********************************************************************
+ **************************************************************************** */
+
+export enum SystemProperties {
+	SR = "sr",
+	ASIOSR = "ASIOsr",
+	BufferMME = "buffer.mme",
+	BufferWDM = "buffer.wdm",
+	BufferKS = "buffer.ks",
+	BufferASIO = "buffer.asio",
+	ModeExclusif = "mode.exclusif",
+	ModeSwift = "mode.swift",
+	MonitorOnSEL = "MonitorOnSEL",
+}
+
+export enum SystemBusDelayProperties {
+	Delay = "delay[bus]",
+}
+
+/* RECORDER ********************************************************************
+ **************************************************************************** */
+
+// @todo
+export enum RecorderProperties {}
+
+/* VBAN ************************************************************************
+ **************************************************************************** */
+
+// @todo
+export enum VBANProperties {}

@@ -2,6 +2,14 @@ export declare const InterfaceTypes: {
     strip: number;
     bus: number;
 };
+export declare enum Replacers {
+    App = "[app]",
+    Bus = "[bus]",
+    Button = "[button]",
+    Cell = "[cell]",
+    Channel = "[channel]",
+    Strip = "[strip]"
+}
 export declare enum StripProperties {
     Mono = "Mono",
     Mute = "Mute",
@@ -48,6 +56,15 @@ export declare enum StripProperties {
     DeviceMME = "device.mme",
     DeviceASIO = "device.asio"
 }
+export declare enum StripGainLayerProperties {
+    GainLayer = "GainLayer[bus]"
+}
+export declare enum StripAppProperties {
+    StripAppGain = "AppGain",
+    StripAppMute = "AppMute",
+    StripAppGainPartialMatch = "App[app].Gain",
+    StripAppMutePartialMatch = "App[app].Mute"
+}
 export declare enum BusProperties {
     Mono = "Mono",
     Mute = "Mute",
@@ -81,6 +98,13 @@ export declare enum BusProperties {
     DeviceMME = "device.mme",
     DeviceASIO = "device.asio"
 }
+export declare enum BusEQChannelCellProperties {
+    EQChannelCellOn = "EQ.channel[channel].cell[cell].on",
+    EQChannelCellType = "EQ.channel[channel].cell[cell].type",
+    EQChannelCellF = "EQ.channel[channel].cell[cell].f",
+    EQChannelCellGain = "EQ.channel[channel].cell[cell].gain",
+    EQChannelCellQ = "EQ.channel[channel].cell[cell].q"
+}
 export declare enum CommandProperties {
     Shutdown = "Shutdown",
     Show = "Show",
@@ -88,5 +112,56 @@ export declare enum CommandProperties {
     Eject = "Eject",
     Reset = "Reset",
     Save = "Save",
-    Load = "Load"
+    Load = "Load",
+    DialogShowVBANCHAT = "DialogShow.VBANCHAT"
+}
+export declare enum CommandBusEQProperties {
+    LoadBUSEQ = "LoadBUSEQ[bus]",
+    SaveBUSEQ = "SaveBUSEQ[bus]"
+}
+export declare enum CommandButtonProperties {
+    ButtonState = "Button[button].State",
+    ButtonStateOnly = "Button[button].StateOnly",
+    ButtonTrigger = "Button[button].Trigger"
+}
+export declare enum FXProperties {
+    ReverbOn = "Reverb.On",
+    ReverbAB = "Reverb.AB",
+    DelayOn = "Delay.On",
+    DelayAB = "Delay.AB"
+}
+export declare enum PatchProperties {
+    PostFaderComposite = "PostFaderComposite",
+    PostFxInsert = "PostFxInsert"
+}
+export declare enum PatchChannelProperties {
+    Asio = "asio[channel]",
+    OutA2 = "OutA2[channel]",
+    OutA3 = "OutA3[channel]",
+    OutA4 = "OutA4[channel]",
+    OutA5 = "OutA5[channel]"
+}
+export declare enum PatchCompositeProperties {
+    Composite = "composite[channel]"
+}
+export declare enum PatchInsertProperties {
+    Insert = "insert[channel]"
+}
+export declare enum SystemProperties {
+    SR = "sr",
+    ASIOSR = "ASIOsr",
+    BufferMME = "buffer.mme",
+    BufferWDM = "buffer.wdm",
+    BufferKS = "buffer.ks",
+    BufferASIO = "buffer.asio",
+    ModeExclusif = "mode.exclusif",
+    ModeSwift = "mode.swift",
+    MonitorOnSEL = "MonitorOnSEL"
+}
+export declare enum SystemBusDelayProperties {
+    Delay = "delay[bus]"
+}
+export declare enum RecorderProperties {
+}
+export declare enum VBANProperties {
 }

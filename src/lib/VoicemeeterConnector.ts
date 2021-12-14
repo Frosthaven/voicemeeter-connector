@@ -3,7 +3,22 @@ import ffi from "ffi-napi";
 import refArray from "ref-array-napi";
 import DLLHandler from "./DLLHandler";
 import { Device, VMLibrary, VoiceMeeterTypes } from "../types/VoicemeeterTypes";
-import { BusProperties, StripProperties, CommandProperties } from "./VoicemeeterConsts";
+import {
+	BusProperties,
+	StripProperties,
+	CommandProperties,
+	StripGainLayerProperties,
+	Replacers,
+	StripAppProperties,
+	CommandButtonProperties,
+	CommandBusEQProperties,
+	FXProperties,
+	BusEQChannelCellProperties,
+	PatchProperties,
+	SystemProperties,
+	SystemBusDelayProperties,
+	PatchChannelProperties,
+} from "./VoicemeeterConsts";
 /**
  * @ignore
  */
@@ -181,15 +196,8 @@ export default class Voicemeeter {
 		return libVM.VBVMR_IsParametersDirty();
 	};
 
-	/**
-	 * Gets a bus parameter.
-	 * @param  {number} index Index of the bus
-	 * @param  {BusProperties} property Property which should be get
-	 */
-
-	public getBusParameter = (index: number, property: BusProperties) => {
-		return this.getParameter("Bus", index, property);
-	};
+	/* STRIP PARAMS ************************************************************
+	 ************************************************************************ */
 
 	/**
 	 * Gets a strip parameter
@@ -210,6 +218,18 @@ export default class Voicemeeter {
 		return this.setParameter("Strip", index, property, value);
 	};
 
+	/* BUS PARAMS **************************************************************
+	 ************************************************************************ */
+	/**
+	 * Gets a bus parameter.
+	 * @param  {number} index Index of the bus
+	 * @param  {BusProperties} property Property which should be get
+	 */
+
+	public getBusParameter = (index: number, property: BusProperties) => {
+		return this.getParameter("Bus", index, property);
+	};
+
 	/**
 	 * Sets a parameter of a bus.
 	 * @param  {number} index Bus number
@@ -219,6 +239,257 @@ export default class Voicemeeter {
 	public setBusParameter = (index: number, property: BusProperties, value: any) => {
 		return this.setParameter("Bus", index, property, value);
 	};
+
+	/* STRIP GAIN LAYER PARAMS *************************************************
+	 ************************************************************************ */
+
+	/**
+	 * Gets a strip gain layer parameter
+	 * @param  {number} index Index of the strip
+	 * @param  {number} bus Index of the bus
+	 */
+	public getStripGainLayerParameter = (index: number, bus: number) => {
+		const property = StripGainLayerProperties.GainLayer.replace(Replacers.Bus, `[${bus}]`);
+		return this.getParameter("Strip", index, property);
+	};
+
+	/**
+	 * Sets a strip gain layer parameter
+	 * @param  {number} index Index of the strip
+	 * @param  {number} bus Index of the bus
+	 * @param  {any} value Property value
+	 */
+	public setStripGainLayerParameter = (index: number, bus: number, value: any) => {
+		const property = StripGainLayerProperties.GainLayer.replace(Replacers.Bus, `[${bus}]`);
+		return this.setParameter("Strip", index, property, value);
+	};
+
+	/* STRIP APP PARAMS ********************************************************
+	 ************************************************************************ */
+
+	/**
+	 * Sets a strip app parameter (app parameters are write-only)
+	 * @param  {number} index Index of the strip
+	 * @param  {StripAppProperties} property Property which should be set
+	 * @param  {string} [app] Name of the app
+	 * @param  {any} value Property value
+	 */
+	public setStripAppParameter = (index: number, property: StripAppProperties | string, app: string, value: any) => {
+		if (property.includes("[")) {
+			// we are looking at an app that is starting with a name
+			property = property.replace(Replacers.App, `[${app}]`);
+		} else {
+			// we are looking at an app with an exact name
+			// AppGain, Appmute = ("appname", number)
+			value = `("${app}",${value})`;
+		}
+		return this.setParameter("Strip", index, property, value);
+	};
+
+	/* BUS EQ CHANNEL CELL PARAMS **********************************************
+	 ************************************************************************ */
+
+	/**
+	 * Gets a bus eq channel cell value
+	 * @param  {number} index Index of the bus
+	 * @param  {number} channel the channel 0 based index
+	 * @param  {number} cell the cell 0 based index (0-5)
+	 * @param  {BusEQChannelCellProperties} property Property which should be get
+	 */
+	public getBusEQChannelCellParameter = (index: number, channel: number, cell: number, property: BusEQChannelCellProperties | string) => {
+		property = property.replace(Replacers.Channel, `[${channel}]`);
+		property = property.replace(Replacers.Cell, `[${cell}]`);
+		return this.getParameter("Bus", index, property);
+	};
+
+	/**
+	 * Sets a bus eq channel cell value
+	 * @param  {number} index Index of the bus
+	 * @param  {number} channel the channel 0 based index
+	 * @param  {number} cell the cell 0 based index (0-5)
+	 * @param  {BusEQChannelCellProperties} property Property which should be set
+	 * @param  {any} value Property value
+	 */
+	public setBusEQChannelCellParameter = (
+		index: number,
+		channel: number,
+		cell: number,
+		property: BusEQChannelCellProperties | string,
+		value: any
+	) => {
+		property = property.replace(Replacers.Channel, `[${channel}]`);
+		property = property.replace(Replacers.Cell, `[${cell}]`);
+		return this.setParameter("Bus", index, property, value);
+	};
+
+	/* FX PARAMS ***************************************************************
+	 ************************************************************************ */
+
+	/**
+	 * Gets an fx parameter
+	 * @param  {FXProperties} property Property which should be get
+	 */
+	public getFXParameter = (property: FXProperties | string) => {
+		return this.getParameter("Fx", null, property);
+	};
+
+	/**
+	 * Sets an fx parameter
+	 * @param  {FXProperties} property Property which should be set
+	 * @param  {any} value Property value
+	 */
+	public setFXParameter = (property: FXProperties | string, value: any) => {
+		return this.setParameter("Fx", null, property, value);
+	};
+
+	/* PATCH PARAMS ************************************************************
+	 ************************************************************************ */
+
+	/**
+	 * Gets a patch parameter
+	 * @param  {PatchProperties} property Property which should be get
+	 */
+	public getPatchParameter = (property: PatchProperties | string) => {
+		return this.getParameter("Patch", null, property);
+	};
+
+	/**
+	 * Sets a patch parameter
+	 * @param  {PatchProperties} property Property which should be set
+	 * @param  {any} value Property value
+	 */
+	public setPatchParamater = (property: PatchProperties | string, value: any) => {
+		return this.setParameter("Patch", null, property, value);
+	};
+
+	/* PATCH PARAMS ************************************************************
+	 ************************************************************************ */
+
+	/**
+	 * Gets a patch channel parameter
+	 * @param  {number} index input channel zero based index (for physical strips only - 2 channels per strip)
+	 * @param  {PatchChannelProperties} property Property which should be get
+	 */
+	public getPatchChannelParameter = (index: number, property: PatchChannelProperties | string) => {
+		property = property.replace(Replacers.Channel, `[${index}]`);
+		return this.getParameter("patch", null, property);
+	};
+
+	/**
+	 * Sets a patch channel parameter
+	 * @param  {number} index input channel zero based index (for physical strips only - 2 channels per strip)
+	 * @param  {PatchChannelProperties} property Property which should be set
+	 * @param  {any} value Property value
+	 */
+	public setPatchChannelParamater = (index: number, property: PatchChannelProperties | string, value: any) => {
+		property = property.replace(Replacers.Channel, `[${index}]`);
+		return this.setParameter("patch", null, property, value);
+	};
+
+	/* SYSTEM PARAMS ***********************************************************
+	 ************************************************************************ */
+
+	/**
+	 * Gets a system parameter
+	 * @param  {SystemProperties} property Property which should be get
+	 */
+	public getSystemParameter = (property: SystemProperties | string) => {
+		return this.getParameter("Option", null, property);
+	};
+
+	/**
+	 * Sets a system parameter
+	 * @param  {SystemProperties} property Property which should be set
+	 * @param  {any} value Property value
+	 */
+	public setSystemParameter = (property: SystemProperties | string, value: any) => {
+		return this.setParameter("Option", null, property, value);
+	};
+
+	/* SYSTEM BUS DELAY PARAMS *************************************************
+	 ************************************************************************ */
+
+	/**
+	 * Gets a system parameter
+	 * @param  {number} index Index of the bus
+	 * @param  {SystemProperties} property Property which should be get
+	 */
+	public getSystemBusDelayParameter = (index: number, property: SystemBusDelayProperties | string) => {
+		property = property.replace(Replacers.Bus, `[${index}]`);
+		return this.getParameter("Option", null, property);
+	};
+
+	/**
+	 * Sets a system parameter
+	 * @param  {number} index Index of the bus
+	 * @param  {SystemProperties} property Property which should be set
+	 * @param  {any} value Property value
+	 */
+	public setSystemBusDelayParameter = (index: number, property: SystemBusDelayProperties | string, value: any) => {
+		property = property.replace(Replacers.Bus, `[${index}]`);
+		return this.setParameter("Option", null, property, value);
+	};
+
+	/* COMMAND PARAMS **********************************************************
+	 ************************************************************************ */
+
+	/**
+	 * Sets a command (write-only)
+	 * @param {CommandProperties} property Propertyname which should be executed
+	 * @param value Property value
+	 */
+	public setCommandParameter = (property: CommandProperties, value: any): Promise<any> => {
+		if (!this.isConnected) {
+			throw new Error("Not connected ");
+		}
+		const scriptString = `Command.${property}=${value};`;
+		const script = Buffer.alloc(scriptString.length + 1);
+		script.fill(0);
+		script.write(scriptString);
+		libVM.VBVMR_SetParameters(script);
+		return new Promise((resolve) => setTimeout(resolve, 200));
+	};
+
+	/**
+	 * Sets a bus eq command (write-only)
+	 * @param {number} bus Index of the bus
+	 * @param {CommandBusEQProperties} property Propertyname which should be executed
+	 * @param value Property value
+	 */
+	public setCommandBusEQParamater = (bus: number, property: CommandBusEQProperties | string, value: any): Promise<any> => {
+		if (!this.isConnected) {
+			throw new Error("Not connected ");
+		}
+		property = property.replace(Replacers.Bus, `[${bus}]`);
+		const scriptString = `Command.${property}=${value};`;
+		const script = Buffer.alloc(scriptString.length + 1);
+		script.fill(0);
+		script.write(scriptString);
+		libVM.VBVMR_SetParameters(script);
+		return new Promise((resolve) => setTimeout(resolve, 200));
+	};
+
+	/**
+	 * Sets a button command (write-only)
+	 * @param {number} button Index of the macro button
+	 * @param {CommandButtonProperties} property Propertyname which should be executed
+	 * @param value Property value
+	 */
+	public setCommandButtonParameter = (button: number, property: CommandButtonProperties | string, value: any): Promise<any> => {
+		if (!this.isConnected) {
+			throw new Error("Not connected ");
+		}
+		property = property.replace(Replacers.Button, `[${button}]`);
+		const scriptString = `Command.${property}=${value};`;
+		const script = Buffer.alloc(scriptString.length + 1);
+		script.fill(0);
+		script.write(scriptString);
+		libVM.VBVMR_SetParameters(script);
+		return new Promise((resolve) => setTimeout(resolve, 200));
+	};
+
+	/* *************************************************************************
+	 ************************************************************************ */
 
 	/**
 	 * @param  {()=>any} fn Function which should be called if something changes
@@ -276,8 +547,12 @@ export default class Voicemeeter {
 	 * @param  {number} index Number of strip or bus
 	 * @param  {StripProperties|BusProperties} property Property which should be read
 	 */
-	private getParameter = (selector: "Strip" | "Bus", index: number, property: StripProperties | BusProperties) => {
-		const parameterName = `${selector}[${index}].${property}`;
+	private getParameter = (
+		selector: "Strip" | "Bus" | "Fx" | "patch" | "Patch" | "Option",
+		index: number | null,
+		property: StripProperties | BusProperties | string
+	) => {
+		const parameterName = index !== null ? `${selector}[${index}].${property}` : `${selector}.${property}`;
 		if (!this.isConnected) {
 			throw new Error("Not correct connected ");
 		}
@@ -308,32 +583,15 @@ export default class Voicemeeter {
 	 * @param  {any} value Property value
 	 */
 	private setParameter = (
-		selector: "Strip" | "Bus",
-		index: number,
-		property: StripProperties | BusProperties,
+		selector: "Strip" | "Bus" | "Fx" | "patch" | "Patch" | "Option",
+		index: number | null,
+		property: StripProperties | BusProperties | string,
 		value: any
 	): Promise<any> => {
 		if (!this.isConnected) {
 			throw new Error("Not connected ");
 		}
-		const scriptString = `${selector}[${index}].${property}=${value};`;
-		const script = Buffer.alloc(scriptString.length + 1);
-		script.fill(0);
-		script.write(scriptString);
-		libVM.VBVMR_SetParameters(script);
-		return new Promise((resolve) => setTimeout(resolve, 200));
-	};
-
-	/**
-	 * Sends a command
-	 * @param {CommandProperties} property Propertyname which should be executed
-	 * @param value Property value
-	 */
-	public sendCommand = (property: CommandProperties, value: any): Promise<any> => {
-		if (!this.isConnected) {
-			throw new Error("Not connected ");
-		}
-		const scriptString = `Command.${property}=${value};`;
+		const scriptString = index !== null ? `${selector}[${index}].${property}=${value};` : `${selector}.${property}=${value};`;
 		const script = Buffer.alloc(scriptString.length + 1);
 		script.fill(0);
 		script.write(scriptString);

@@ -3,6 +3,38 @@ import Voicemeeter from "./lib/VoicemeeterConnector";
 import * as constants from "./lib/VoicemeeterConsts";
 import * as types from "./types/VoicemeeterTypes";
 
-const { BusProperties, InterfaceTypes, StripProperties } = constants;
+const {
+	InterfaceTypes,
+	StripProperties,
+	BusProperties,
+	BusEQChannelCellProperties,
+	FXProperties,
+	CommandProperties,
+	PatchProperties,
+	PatchChannelProperties,
+	PatchCompositeProperties,
+	PatchInsertProperties,
+	SystemProperties,
+	SystemBusDelayProperties,
+	RecorderProperties,
+	VBANProperties,
+} = constants;
 
-export { Voicemeeter, BusProperties, InterfaceTypes, StripProperties, types };
+export {
+	Voicemeeter,
+	InterfaceTypes,
+	StripProperties,
+	BusProperties,
+	BusEQChannelCellProperties,
+	FXProperties,
+	CommandProperties,
+	PatchProperties,
+	PatchChannelProperties,
+	PatchCompositeProperties,
+	PatchInsertProperties,
+	SystemProperties,
+	SystemBusDelayProperties,
+	RecorderProperties,
+	VBANProperties,
+	types,
+};
